@@ -5,11 +5,14 @@ from firebase_admin import credentials, db
 import matplotlib.pyplot as plt
 import plotly.express as px  
 
-# Configuración de Firebase
-cred = credentials.Certificate("trabajo-12ee4-firebase-adminsdk-fbsvc-fc7ba51f83.json")
-firebase_admin.initialize_app(cred, {
-    "databaseURL": "https://trabajo-12ee4-default-rtdb.firebaseio.com/"
-})
+# Cargar credenciales desde los secretos de Streamlit
+google_credentials = json.loads(st.secrets["google_credentials"]["GOOGLE_CREDENTIALS"])
+
+# Crear credenciales de Firebase
+cred = credentials.Certificate(google_credentials)
+
+# Inicializar Firebase
+firebase_admin.initialize_app(cred)
 
 # Obtener datos de Firebase
 ref = db.reference("/monedas")

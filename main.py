@@ -11,15 +11,20 @@ firebase_secrets = st.secrets["firebase"]
 firebase_credentials = json.loads(firebase_secrets["credentials"])
 database_url = firebase_secrets["database_url"]
 
-# Inicializar Firebase
-cred = credentials.Certificate(firebase_credentials)
-firebase_admin.initialize_app(cred, {
-    "databaseURL": database_url
-})
+# Verifica si Firebase ya está inicializado
+if not firebase_admin._apps:
+    cred = credentials.Certificate(firebase_credentials)
+    firebase_admin.initialize_app(cred, {
+        "databaseURL": database_url
+    })
 
 # 🔹 2. Obtener datos desde Firebase
-ref = db.reference("/monedas")
-datos = ref.get()
+try:
+    ref = db.reference("/monedas")
+    datos = ref.get()
+    st.write("Datos obtenidos correctamente de Firebase.")
+except Exception as e:
+    st.error(f"Error al obtener datos de Firebase: {e}")
 
 # Procesar datos
 registros = []
